@@ -23,11 +23,14 @@ Route::get('/proyecto1', function () {
 })->name('proyecto1');
 
 Route::get('/proyecto2', function () {
-    return view('proyecto2');
+    return 'Este es el proyecto 2';
 })->name('proyecto2');
 
 // Ruta para mostrar lista de estudiantes
 Route::get('/estudiantes/index', [EstudiantesController::class, 'index'])->name('estudiantes.index');
+// Ruta para guardar estudiantes (agregada)
+Route::post('/estudiantes', [EstudiantesController::class, 'store'])->name('estudiantes.store');
 
 // Ruta para mostrar lista de jugadores
 Route::get('/jugadores', [JugadorController::class, 'index'])->name('jugadores.index');
+Route::post('/jugadores', [JugadorController::class, 'store'])->name('jugadores.store');
