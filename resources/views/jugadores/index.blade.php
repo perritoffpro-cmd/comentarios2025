@@ -72,6 +72,7 @@
             <th class="p-3 text-left">🧾 Apellido</th>
             <th class="p-3 text-left">🎯 Posición</th>
             <th class="p-3 text-left">🔢 Número</th>
+            <th class="p-3 text-left">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -81,10 +82,29 @@
               <td class="p-3 text-gray-700">{{ $jugador->apellido }}</td>
               <td class="p-3 text-gray-700">{{ $jugador->posicion }}</td>
               <td class="p-3 text-gray-700">{{ $jugador->numero }}</td>
+              <td class="p-3 space-x-2">
+                <a href="{{ route('jugadores.show', $jugador->id) }}" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-full text-sm">
+                  Ver
+                </a>
+                <a href="{{ route('jugadores.edit', $jugador->id) }}" 
+                   class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-1 px-3 rounded-full text-sm">
+                  Editar
+                </a>
+                <form action="{{ route('jugadores.destroy', $jugador->id) }}" method="POST" class="inline">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" 
+                          onclick="return confirm('¿Seguro que quieres eliminar este jugador?')" 
+                          class="bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded-full text-sm">
+                    Eliminar
+                  </button>
+                </form>
+              </td>
             </tr>
           @empty
             <tr>
-              <td colspan="4" class="text-center p-4 text-gray-600">📭 No hay jugadores registrados.</td>
+              <td colspan="5" class="text-center p-4 text-gray-600">📭 No hay jugadores registrados.</td>
             </tr>
           @endforelse
         </tbody>

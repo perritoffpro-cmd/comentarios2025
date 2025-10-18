@@ -4,12 +4,11 @@ use App\Http\Controllers\Estudiantes\EstudiantesController;
 use App\Http\Controllers\Estudiantes\JugadorController;
 use Illuminate\Support\Facades\Route;
 
-// Ruta principal que muestra los enlaces a Estudiantes y Jugadores
+// Rutas generales
 Route::get('/', function () {
-    return view('welcome'); // Vista con los enlaces
+    return view('welcome');
 });
 
-// Otras rutas fijas
 Route::get('/saludos', function () {
     return 'Hello World';
 })->name('saluditos');
@@ -26,11 +25,26 @@ Route::get('/proyecto2', function () {
     return 'Este es el proyecto 2';
 })->name('proyecto2');
 
-// Ruta para mostrar lista de estudiantes
+// Rutas para estudiantes
 Route::get('/estudiantes/index', [EstudiantesController::class, 'index'])->name('estudiantes.index');
-// Ruta para guardar estudiantes (agregada)
 Route::post('/estudiantes', [EstudiantesController::class, 'store'])->name('estudiantes.store');
 
-// Ruta para mostrar lista de jugadores
+Route::get('/estudiantes/{codigo}/edit', [EstudiantesController::class, 'edit'])->name('estudiantes.edit');
+Route::put('/estudiantes/{codigo}', [EstudiantesController::class, 'update'])->name('estudiantes.update');
+Route::delete('/estudiantes/{codigo}', [EstudiantesController::class, 'destroy'])->name('estudiantes.destroy');
+
+// Ruta para buscar estudiante
+Route::get('/estudiantes/buscar', [EstudiantesController::class, 'buscar'])->name('estudiantes.buscar');
+
+// Ruta para mostrar un solo estudiante
+Route::get('/estudiantes/{codigo}', [EstudiantesController::class, 'show'])->name('estudiantes.show');
+
+// Rutas para jugadores
 Route::get('/jugadores', [JugadorController::class, 'index'])->name('jugadores.index');
 Route::post('/jugadores', [JugadorController::class, 'store'])->name('jugadores.store');
+
+// Nuevas rutas para jugadores
+Route::get('/jugadores/{id}', [JugadorController::class, 'show'])->name('jugadores.show');
+Route::get('/jugadores/{id}/edit', [JugadorController::class, 'edit'])->name('jugadores.edit');
+Route::put('/jugadores/{id}', [JugadorController::class, 'update'])->name('jugadores.update');
+Route::delete('/jugadores/{id}', [JugadorController::class, 'destroy'])->name('jugadores.destroy');

@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>🎓 Estudiantes</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
@@ -20,6 +20,19 @@
         ✅ {{ session('success') }}
       </div>
     @endif
+
+    {{-- Mensaje de error --}}
+    @if(session('error'))
+      <div class="bg-red-100 border border-red-500 text-red-800 px-4 py-3 rounded mb-6 text-center">
+        ❌ {{ session('error') }}
+      </div>
+    @endif
+
+    {{-- Formulario de búsqueda --}}
+    <form action="{{ route('estudiantes.index') }}" method="GET" class="mb-6">
+      <input type="text" name="search" placeholder="Buscar por código, nombre o DNI..." value="{{ request('search') }}"
+        class="w-full p-2 border border-blue-400 rounded" />
+    </form>
 
     {{-- Botón para mostrar formulario --}}
     <div class="text-center mb-4">
@@ -78,6 +91,7 @@
             <th class="p-3 text-left">🧾 Primer Apellido</th>
             <th class="p-3 text-left">🧾 Segundo Apellido</th>
             <th class="p-3 text-left">🪪 DNI</th>
+            <th class="p-3 text-center">Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -88,10 +102,30 @@
               <td class="p-3 text-gray-700">{{ $estudiante->pri_ape }}</td>
               <td class="p-3 text-gray-700">{{ $estudiante->seg_ape }}</td>
               <td class="p-3 text-gray-700">{{ $estudiante->dni }}</td>
+              <td class="p-3 text-center space-x-2">
+                <a href="{{ route('estudiantes.show', $estudiante->codigo) }}" 
+                   class="bg-blue-500 px-3 py-1 rounded text-white hover:bg-blue-600">
+                  Ver
+                </a>
+
+                <a href="{{ route('estudiantes.edit', $estudiante->codigo) }}" 
+                   class="bg-yellow-400 px-3 py-1 rounded text-white hover:bg-yellow-500">
+                  Editar
+                </a>
+
+                <form action="{{ route('estudiantes.destroy', $estudiante->codigo) }}" method="POST" class="inline-block">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" onclick="return confirm('¿Eliminar estudiante {{ $estudiante->nombres }}?')"
+                    class="bg-red-600 px-3 py-1 rounded text-white hover:bg-red-700">
+                    Eliminar
+                  </button>
+                </form>
+              </td>
             </tr>
           @empty
             <tr>
-              <td colspan="5" class="text-center p-4 text-gray-600">📭 No hay estudiantes registrados.</td>
+              <td colspan="6" class="text-center p-4 text-gray-600">📭 No hay estudiantes registrados.</td>
             </tr>
           @endforelse
         </tbody>

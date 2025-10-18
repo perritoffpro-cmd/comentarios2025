@@ -6,25 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('estudiantes', function (Blueprint $table) {
-            $table->id();
-            $table->string('codigo', length: 21)->nullable();
-            $table->string('nombres', length: 120);
-            $table->string('pri_ape', length: 120);
-            $table->string('seg_ape', length: 100);
-            $table->string('dni', length: 8)->nullable();
+            $table->id(); // clave primaria auto incremental
+            $table->string('codigo', 21)->unique(); // único y no nullable
+            $table->string('nombres', 120);
+            $table->string('pri_ape', 120);
+            $table->string('seg_ape', 100)->nullable();
+            $table->string('dni', 8);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('estudiantes');
