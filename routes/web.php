@@ -1,50 +1,63 @@
 <?php
 
-use App\Http\Controllers\Estudiantes\EstudiantesController;
-use App\Http\Controllers\Estudiantes\JugadorController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Estudiantes\EstudiantesController;
+use App\Http\Controllers\Jugador\JugadorController; // ✅ corregido namespace
 
-// Rutas generales
+// ---------------------
+// 🔹 Rutas generales
+// ---------------------
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/saludos', function () {
-    return 'Hello World';
-})->name('saluditos');
+Route::get('/saludos', fn() => 'Hello World')->name('saluditos');
+Route::get('/bienvenido', fn() => view('bienvenidos'))->name('bienvenidos1');
+Route::get('/proyecto1', fn() => 'Este es el proyecto 1')->name('proyecto1');
+Route::get('/proyecto2', fn() => 'Este es el proyecto 2')->name('proyecto2');
 
-Route::get('/bienvenido', function () {
-    return view('bienvenidos');
-})->name('bienvenidos1');
+// ---------------------
+// 🎓 Rutas para estudiantes
+// ---------------------
+Route::prefix('estudiantes')->name('estudiantes.')->group(function () {
+    Route::get('/index', [EstudiantesController::class, 'index'])->name('index');
+    Route::post('/', [EstudiantesController::class, 'store'])->name('store');
+    Route::get('/buscar', [EstudiantesController::class, 'buscar'])->name('buscar');
+    Route::get('/{codigo}', [EstudiantesController::class, 'show'])->name('show');
+    Route::get('/{codigo}/edit', [EstudiantesController::class, 'edit'])->name('edit');
+    Route::put('/{codigo}', [EstudiantesController::class, 'update'])->name('update');
+    Route::delete('/{codigo}', [EstudiantesController::class, 'destroy'])->name('destroy');
+});
 
-Route::get('/proyecto1', function () {
-    return 'Este es el proyecto 1';
-})->name('proyecto1');
+// ---------------------
+// ⚽ Rutas para jugadores (login, registro, misiones y recompensas)
+// ---------------------
+Route::prefix('jugadores')->name('jugadores.')->group(function () {
 
-Route::get('/proyecto2', function () {
-    return 'Este es el proyecto 2';
-})->name('proyecto2');
+    // 🟢 Vista principal (login y registro)
+    Route::get('/', [JugadorController::class, 'index'])->name('index');
 
-// Rutas para estudiantes
-Route::get('/estudiantes/index', [EstudiantesController::class, 'index'])->name('estudiantes.index');
-Route::post('/estudiantes', [EstudiantesController::class, 'store'])->name('estudiantes.store');
+    // 🟢 Registrar nuevo jugador
+    Route::post('/register', [JugadorController::class, 'register'])->name('register');
 
-Route::get('/estudiantes/{codigo}/edit', [EstudiantesController::class, 'edit'])->name('estudiantes.edit');
-Route::put('/estudiantes/{codigo}', [EstudiantesController::class, 'update'])->name('estudiantes.update');
-Route::delete('/estudiantes/{codigo}', [EstudiantesController::class, 'destroy'])->name('estudiantes.destroy');
+    // 🟢 Iniciar sesión
+    Route::post('/login', [JugadorController::class, 'login'])->name('login');
 
-// Ruta para buscar estudiante
-Route::get('/estudiantes/buscar', [EstudiantesController::class, 'buscar'])->name('estudiantes.buscar');
+    // 🟢 Cerrar sesión
+    Route::post('/logout', [JugadorController::class, 'logout'])->name('logout');
 
-// Ruta para mostrar un solo estudiante
-Route::get('/estudiantes/{codigo}', [EstudiantesController::class, 'show'])->name('estudiantes.show');
+    // 🟡 Página de inicio o menú principal (después del login)
+    Route::get('/dashboard', [JugadorController::class, 'dashboard'])
+        ->name('dashboard')
+        ->middleware('auth');
 
-// Rutas para jugadores
-Route::get('/jugadores', [JugadorController::class, 'index'])->name('jugadores.index');
-Route::post('/jugadores', [JugadorController::class, 'store'])->name('jugadores.store');
+    // 🔹 Ver misiones disponibles
+    Route::get('/misiones', [JugadorController::class, 'misiones'])
+        ->name('misiones')
+        ->middleware('auth');
 
-// Nuevas rutas para jugadores
-Route::get('/jugadores/{id}', [JugadorController::class, 'show'])->name('jugadores.show');
-Route::get('/jugadores/{id}/edit', [JugadorController::class, 'edit'])->name('jugadores.edit');
-Route::put('/jugadores/{id}', [JugadorController::class, 'update'])->name('jugadores.update');
-Route::delete('/jugadores/{id}', [JugadorController::class, 'destroy'])->name('jugadores.destroy');
+    // 🔹 Ver recompensas
+    Route::get('/recompensas', [JugadorController::class, 'recompensas'])
+        ->name('recompensas')
+        ->middleware('auth');
+});
